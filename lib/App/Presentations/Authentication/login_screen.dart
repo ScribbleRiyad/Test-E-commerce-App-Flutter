@@ -54,16 +54,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           prefixIcon: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: SvgPicture.asset(
-                              "assets/Svg/Password.svg", height: 5, width: 5,),
+                              "assets/Svg/Email.svg", height: 5, width: 5,),
                           ),
                           obscureText: false,
-                          hint: "Password",
+                          hint: "Email",
 
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(height: 10,),
+                  const SizedBox(height: 8,),
                   Card(
                     margin: EdgeInsets.zero,
                     color: Colors.white,

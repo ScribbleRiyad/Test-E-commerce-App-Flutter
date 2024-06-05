@@ -31,7 +31,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3), () {
 
-        context.goNamed(RouteName.registrationScreen);
+        context.goNamed(RouteName.applicationScreen);
 
 
 
