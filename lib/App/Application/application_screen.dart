@@ -2,8 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:go_router/go_router.dart';
 import 'package:lottie/lottie.dart';
+import '../Presentations/Home/filter_model_bottom_sheet.dart';
 import '../Provider/Home/home_provider.dart';
 import '../Utils/theme_styles.dart';
 import '../Widgets/dokan_text_widget.dart';
@@ -40,7 +40,17 @@ class _ApplicationScreenState extends ConsumerState<ApplicationScreen> {
         floatingActionButton: FloatingActionButton(
             elevation: 0,
             onPressed: () {
-              context.push("/allProductScreen");
+
+                showModalBottomSheet(
+                  context: context,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(25.0),
+                    ),
+                  ),
+                  builder: (context) => const FilterModalBottomSheet(),
+                );
+
             },
             backgroundColor: ThemeStyles.primary,
             child: SvgPicture.asset(

@@ -63,13 +63,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 8,),
-                  Card(
-                    margin: EdgeInsets.zero,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)
-                    ),
+                  const SizedBox(height: 8,),    Card(
+            margin: EdgeInsets.zero,
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10)
+            ),
+
                     elevation: 1,
                     child: SizedBox(
                       height: 55,
