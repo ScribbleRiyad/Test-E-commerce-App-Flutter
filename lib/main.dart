@@ -34,7 +34,7 @@ class ECommerceApp extends StatelessWidget  {
   @override
   Widget build(BuildContext context) {
     SystemUiOverlayStyle systemUiOverlayStyle = const SystemUiOverlayStyle(
-        statusBarColor: ThemeStyles.primary,
+        statusBarColor: ThemeStyles.scaffoldBackground,
         statusBarIconBrightness: Brightness.light,
         systemStatusBarContrastEnforced: false);
     SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);

@@ -19,8 +19,6 @@ class DokanCustomButton extends StatelessWidget {
     this.gradient,
     required this.isLoading,
     this.textDecoration,
-    required this.iconColor,
-    required this.assetName,
     super.key,
 
   });
@@ -37,8 +35,6 @@ class DokanCustomButton extends StatelessWidget {
   final Gradient? gradient;
   final bool isLoading;
   final TextDecoration? textDecoration;
-  final Color iconColor;
-  final String assetName ;
 
   @override
   Widget build(BuildContext context) {
@@ -58,24 +54,13 @@ class DokanCustomButton extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Center(
               child: !isLoading
-                  ? Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(assetName  , colorFilter:  ColorFilter.mode(iconColor, BlendMode.srcIn),height: 25,),
-                  const SizedBox(width: 10,),
-                  DokanTextWidget(
+                  ? DokanTextWidget(
                     text: buttonText,
                     color: textColor,
                     fontSize: fontSize ?? 15.0,
                     fontWeight: fontWeight ?? FontWeight.w400,
                     textDecoration: textDecoration ?? TextDecoration.none,
-                  ),
-
-
-
-                ],
-              )
+                  )
                   : const CircularProgressIndicator(
                 color: ThemeStyles.whiteColor,
               ),

@@ -31,7 +31,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
 
     Future.delayed(const Duration(seconds: 3), () {
 
-        context.goNamed(RouteName.applicationScreen);
+        context.goNamed(RouteName.registrationScreen);
 
 
 
@@ -45,11 +45,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: ThemeStyles.primary,
+      backgroundColor: ThemeStyles.scaffoldBackground,
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Center(
-          child: Image.asset("assets/images/Logo.png", color: ThemeStyles.whiteColor, height: 100, width: 200,),
+          child: Image.asset("assets/images/Logo.png",  height: 100, width: 200,),
         ),
       ),
     );

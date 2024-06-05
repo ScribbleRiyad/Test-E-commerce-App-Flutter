@@ -56,6 +56,7 @@ class DokanCustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+
       initialValue: initialValue,
       maxLines: maxLines,
       obscureText: obscureText!,
@@ -66,6 +67,7 @@ class DokanCustomTextFormField extends StatelessWidget {
       enabled: enabled ?? true,
       decoration: formInputDecoration(
           suffixIcon: suffixIcon,
+
           labelText: labelText,
           prefixIcon: prefixIcon,
           color: color,
@@ -116,40 +118,40 @@ formInputDecoration(
       color: Colors.black,
     ),
     contentPadding: EdgeInsets.symmetric(
-        horizontal: horizontal ?? 10, vertical: vertical ?? 10),
+        horizontal: horizontal ?? 2, vertical: vertical ?? 2),
     border: const OutlineInputBorder(
       borderRadius: BorderRadius.all(
-        Radius.circular(7.00),
+        Radius.circular(10.00),
       ),
     ),
     disabledBorder: OutlineInputBorder(
-    borderSide: BorderSide(color: color ?? const Color(0xffF1F1F1), width: 0),
+    borderSide: BorderSide(color: color ?? Colors.white, width: 0),
     borderRadius: const BorderRadius.all(
-      Radius.circular(7.00),
+      Radius.circular(10.00),
     ),
   ),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: color ?? const Color(0xffF1F1F1), width: 0),
+      borderSide: BorderSide(color: color ?? Colors.white, width: 0),
       borderRadius: const BorderRadius.all(
-        Radius.circular(7.00),
+        Radius.circular(10.00),
       ),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: color ?? Colors.black12, width: 1),
+      borderSide: BorderSide(color: color ?? Colors.white, width: 0),
       borderRadius: const BorderRadius.all(
-        Radius.circular(7.00),
+        Radius.circular(10.00),
       ),
     ),
     errorBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: color ?? Colors.black12, width: 1),
+      borderSide: BorderSide(color: color ?? Colors.white, width: 0),
       borderRadius: const BorderRadius.all(
-        Radius.circular(7.00),
+        Radius.circular(10.00),
       ),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: color ?? Colors.black12, width: 1),
+      borderSide: BorderSide(color: color ?? Colors.white, width: 0),
       borderRadius: const BorderRadius.all(
-        Radius.circular(7.00),
+        Radius.circular(10.00),
       ),
     ),
   );
