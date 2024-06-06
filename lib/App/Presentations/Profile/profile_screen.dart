@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../Provider/Profile/profile_screen_provider.dart';
 import '../../Utils/theme_styles.dart';
 import '../../Widgets/dokan_custom_button.dart';
 import '../../Widgets/dokan_form_field.dart';
@@ -17,7 +18,17 @@ class ProfileScreen extends ConsumerStatefulWidget {
 }
 
 class _ProfileScreenState extends ConsumerState<ProfileScreen> {
+  dynamic profileScreenProvider;
+  final updateProfileKey = GlobalKey<FormState>();
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    profileScreenProvider = ref.watch(profileScreenController);
+    profileScreenProvider.getProfileLocalData();
+
+  }
   bool onTap = false;
   @override
   Widget build(BuildContext context) {
@@ -38,9 +49,9 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
               ],
             ),
             const SizedBox(height: 10,),
-            const Center(child: DokanTextWidget(text: "MD. RIYAD MAHMUD", color: ThemeStyles.blackColor, fontWeight: FontWeight.bold, fontSize: 18,)),
+            Center(child: DokanTextWidget(text: profileScreenProvider.userName, color: ThemeStyles.blackColor, fontWeight: FontWeight.bold, fontSize: 18,)),
             const SizedBox(height: 5,),
-            const Center(child: DokanTextWidget(text: "riyadmahmud817@gmail.com", color: ThemeStyles.blackColor, fontSize: 14,)),
+             Center(child: DokanTextWidget(text: profileScreenProvider.email, color: ThemeStyles.blackColor, fontSize: 14,)),
             const SizedBox(height: 10,),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -82,83 +93,116 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                         visible: onTap ? true : false,
                         child: Padding(
                           padding: const EdgeInsets.all(15.0),
-                          child: Column(
-                            children: [
-                              const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: DokanTextWidget(text: "Email", color: ThemeStyles.blackColor, fontSize: 14,)),
+                          child: Form(
+                            key: updateProfileKey,
+                            child: Column(
+                              children: [
+                                const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: DokanTextWidget(text: "First Name", color: ThemeStyles.blackColor, fontSize: 14,)),
 
-                              const SizedBox(height: 10,),
-                              const DokanCustomTextFormField(
-                                enabled: true,
-                                fillColor: ThemeStyles.scaffoldBackground,
-                                horizontalPadding: 10,
+                                const SizedBox(height: 10,),
+                                 DokanCustomTextFormField(
+                                  enabled: true,
+                                  fillColor: ThemeStyles.scaffoldBackground,
+                                  horizontalPadding: 10,
 
-                                obscureText: false,
-                                hint: "riyadmahmud817@gmail.com",
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'first Name field cannot be empty';
+                                    } else if (value.length < 3) {
+                                      return 'First Name field cannot be less than 3';
+                                    }
+                                    return null;
+                                  },
+                                  maxLines: 1,
+                                  controller: ref.watch(profileScreenController).updateFirstName,
+                                  textInputType: TextInputType.text,
+                                  onFieldSubmitted: (string) {
+                                    FocusScope.of(context).requestFocus(
+                                        ref.watch(profileScreenController).textformFeildFocusNode);
+                                    return null;
+                                  },
+                                  obscureText: false,
+                                  hint: "Enter Your First Name",
 
-                              ),
-                              const SizedBox(height: 15,),
-                              const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: DokanTextWidget(text: "Full Name", color: ThemeStyles.blackColor, fontSize: 14,)),
-                              const SizedBox(height: 10,),
-                              const DokanCustomTextFormField(
-                                enabled: true,
-                                fillColor: ThemeStyles.scaffoldBackground,
-                                horizontalPadding: 10,
-                                obscureText: false,
-                                hint: "MD. RIYAD MAHMUD",
+                                ),
+                                const SizedBox(height: 15,),
+                                const Align(
+                                    alignment: Alignment.topLeft,
+                                    child: DokanTextWidget(text: "Last Name", color: ThemeStyles.blackColor, fontSize: 14,)),
+                                const SizedBox(height: 10,),
+                                DokanCustomTextFormField(
+                                  enabled: true,
+                                  fillColor: ThemeStyles.scaffoldBackground,
+                                  horizontalPadding: 10,
 
-                              ),
-                              const SizedBox(height: 15,),
-                              const Align(
-                                  alignment: Alignment.topLeft,
-                                  child: DokanTextWidget(text: "Address", color: ThemeStyles.blackColor, fontSize: 14,)),
-                              const SizedBox(height: 10,),
-                              const DokanCustomTextFormField(
-                                enabled: true,
-                                horizontalPadding: 10,
-                                fillColor: ThemeStyles.scaffoldBackground,
+                                  validator: (value) {
+                                    if (value!.isEmpty) {
+                                      return 'Last Name field cannot be empty';
+                                    } else if (value.length < 3) {
+                                      return 'Last Name field cannot be less than 3';
+                                    }
+                                    return null;
+                                  },
+                                  maxLines: 1,
+                                  controller: ref.watch(profileScreenController).updateLastName,
+                                  textInputType: TextInputType.text,
+                                  onFieldSubmitted: (string) {
+                                    FocusScope.of(context).requestFocus(
+                                        ref.watch(profileScreenController).textformFeildFocusNode);
+                                    return null;
+                                  },
+                                  obscureText: false,
+                                  hint: "Enter Your Last Name",
 
-                                obscureText: false,
-                                hint: "Dhaka Bangladesh",
+                                ),
 
-                              ),
-                              const SizedBox(height: 30,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  DokanCustomButton(
-                                    buttonHeight: 50,
-                                    buttonWidth: 120,
-                                    onTap: () {},
-                                    buttonText: "Cancel",
-                                    isLoading: false,
-                                    buttonColor: ThemeStyles.scaffoldBackground,
-                                    borderColor: ThemeStyles.blackColor,
-                                    borderRadius: 10,
-                                    textColor: ThemeStyles.blackColor,
-                                    fontSize: 18,
-                                  ),
-                                  const SizedBox(width: 20,),
-                                  DokanCustomButton(
-                                    buttonHeight: 50,
-                                    buttonWidth: 120,
-                                    onTap: () {},
-                                    buttonText: "Save",
-                                    isLoading: false,
-                                    buttonColor: ThemeStyles.greenColor,
-                                    borderColor: ThemeStyles.whiteColor,
-                                    borderRadius: 10,
-                                    textColor: ThemeStyles.whiteColor,
-                                    fontSize: 18,
-                                  ),
-                                ],
-                              )
+                                const SizedBox(height: 30,),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    DokanCustomButton(
+                                      buttonHeight: 45,
+                                      buttonWidth: 120,
+                                      onTap: () {
+                                        setState(() {
+                                          onTap = false;
+                                        });
 
-                            ],
+                                      },
+                                      buttonText: "Cancel",
+                                      isLoading: false,
+                                      buttonColor: ThemeStyles.scaffoldBackground,
+                                      borderColor: ThemeStyles.scaffoldBackground,
+                                      borderRadius: 10,
+                                      textColor: ThemeStyles.blackColor,
+                                      fontSize: 18,
+                                    ),
+                                    const SizedBox(width: 20,),
+                                    DokanCustomButton(
+                                      buttonHeight: 45,
+                                      buttonWidth: 120,
+                                      onTap: (){
+                                        if (updateProfileKey.currentState!
+                                            .validate()) {
+                                          ref.watch(profileScreenController).updateProfileData(context:context);
+                                        }
+                                      },
+                                      buttonText: "Save",
+                                      isLoading: false,
+                                      buttonColor: ThemeStyles.greenColor,
+                                      borderColor: ThemeStyles.scaffoldBackground,
+                                      borderRadius: 10,
+                                      textColor: ThemeStyles.whiteColor,
+                                      fontSize: 18,
+                                    ),
+                                  ],
+                                )
+
+                              ],
+                            ),
                           ),
                         ),
                       ),

@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 import '../Presentations/Home/filter_model_bottom_sheet.dart';
 import '../Provider/Home/home_provider.dart';
+import '../Provider/Profile/profile_screen_provider.dart';
 import '../Utils/theme_styles.dart';
 import '../Widgets/dokan_text_widget.dart';
 import 'navigation/widgets/custom_bottom_navigation_bar.dart';
@@ -22,13 +23,16 @@ class _ApplicationScreenState extends ConsumerState<ApplicationScreen> {
 
   final PageStorageBucket bucket = PageStorageBucket();
   dynamic homeScreenProvider;
+  dynamic profileScreenProvider;
 
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     homeScreenProvider = ref.watch(homeScreenController);
-
+    profileScreenProvider = ref.watch(profileScreenController);
+    homeScreenProvider.loadProducts();
+    profileScreenProvider.getProfileLocalData();
 
   }
 
@@ -56,7 +60,8 @@ class _ApplicationScreenState extends ConsumerState<ApplicationScreen> {
             child: SvgPicture.asset(
                 'assets/Svg/Search.svg',
                 height: 25,
-              color: ThemeStyles.whiteColor,
+                colorFilter: const ColorFilter.mode(
+                    ThemeStyles.whiteColor, BlendMode.srcIn)
                 )
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
