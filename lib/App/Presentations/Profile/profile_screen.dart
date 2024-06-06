@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+import '../../Provider/Home/home_provider.dart';
 import '../../Provider/Profile/profile_screen_provider.dart';
 import '../../Utils/theme_styles.dart';
 import '../../Widgets/dokan_custom_button.dart';
@@ -236,8 +237,8 @@ class _ProfileScreenState extends ConsumerState<ProfileScreen> {
                           title: 'Logout',
                           icon: 'assets/Svg/logout.svg',
                           onTap: (){
-                            // profileScreenProvider.logout(context: context);
-                            // ref.watch(homeScreenController).setPageIndex(index: 0);
+                            profileScreenProvider.logout(context: context);
+                            ref.watch(homeScreenController).setPageIndex(index: 0);
                           }
                       ),
                       const SizedBox(height: 10,),
