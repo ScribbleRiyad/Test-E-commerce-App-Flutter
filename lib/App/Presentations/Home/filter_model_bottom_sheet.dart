@@ -34,6 +34,7 @@ class _FilterModalBottomSheetState extends State<FilterModalBottomSheet> {
             text: 'Filter',
 
               fontSize: 18,
+              color: ThemeStyles.blackColor,
               fontWeight: FontWeight.bold,
 
           ),
@@ -146,9 +147,11 @@ class FilterOption extends StatelessWidget {
             },
             activeColor: Colors.pink,
           ),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16),
+          DokanTextWidget(
+            text: title,
+            fontSize: 16,
+            color: ThemeStyles.blackColor,
+
           ),
         ],
       ),

@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:test_e_commerce/App/Widgets/dokan_custom_button.dart';
 import 'package:test_e_commerce/App/Widgets/dokan_form_field.dart';
+import '../../Provider/Authentication/authentication_provider.dart';
 import '../../Utils/theme_styles.dart';
 import '../../Widgets/dokan_text_widget.dart';
 
@@ -18,7 +19,27 @@ class RegistrationScreen extends ConsumerStatefulWidget {
 }
 
 class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
+  dynamic authenticationProvider;
+  final registerKey = GlobalKey<FormState>();
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    authenticationProvider = ref.watch(authenticationController);
+
+  }
+  String? _validateEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Please enter an email';
+    }
+    final RegExp emailRegExp = RegExp(
+      r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+\.[a-zA-Z]{2,}$',
+    );
+    if (!emailRegExp.hasMatch(value)) {
+      return 'Please enter a valid email address';
+    }
+    return null;
+  }
   @override
   Widget build(BuildContext context) {
     return   SafeArea(child: Scaffold(
@@ -26,6 +47,7 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
         child: Padding(
           padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10, bottom: 10),
           child: Form(
+            key: registerKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,7 +72,22 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         ),
                         obscureText: false,
                         hint: "Name",
-
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'Name field cannot be empty';
+                          } else if (value.length < 3) {
+                            return 'Name field cannot be less than 3';
+                          }
+                          return null;
+                        },
+                        maxLines: 1,
+                        controller: authenticationProvider.nameController,
+                        textInputType: TextInputType.text,
+                        onFieldSubmitted: (string) {
+                          FocusScope.of(context).requestFocus(
+                              authenticationProvider.textformFeildFocusNode);
+                          return null;
+                        },
                       ),
                     ),
                   ),
@@ -74,6 +111,15 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                         ),
                         obscureText: false,
                         hint: "Email",
+                        maxLines: 1,
+                        controller: authenticationProvider.emailController,
+                        textInputType: TextInputType.text,
+                        validator: _validateEmail,
+                        onFieldSubmitted: (string) {
+                          FocusScope.of(context).requestFocus(
+                              authenticationProvider.textformFeildFocusNode);
+                          return null;
+                        },
 
                       ),
                     ),
@@ -96,8 +142,45 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                           padding: const EdgeInsets.all(12.0),
                           child: SvgPicture.asset("assets/Svg/Password.svg", height: 5,width: 5,),
                         ),
-                        obscureText: false,
+
                         hint: "Password",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'password field cannot be empty';
+                          } else if (value.length < 6) {
+                            return 'password must be 6 digit long';
+                          }
+
+
+
+                          return null;
+                        },
+                        maxLines: 1,
+                        onFieldSubmitted: (string) {
+                          FocusScope.of(context).requestFocus(
+                              authenticationProvider.textformFeildFocusNode);
+                          return null;
+                        },
+                        textInputType: TextInputType.visiblePassword,
+                        controller: ref.watch(authenticationController).passwordController,
+                        obscureText: ref.watch(authenticationController).passwordVisible,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            // Based on passwordVisible state choose the icon
+                            authenticationProvider.passwordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: ThemeStyles.primary,
+                            size: 18,
+                          ),
+                          onPressed: () {
+
+                            setState(() {
+                              authenticationProvider.passwordVisible =
+                              !authenticationProvider.passwordVisible;
+                            });
+                          },
+                        ),
 
                       ),
                     ),
@@ -116,12 +199,48 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                     child: Center(
                       child: DokanCustomTextFormField(
                         enabled: true,
+                        maxLines: 1,
                         prefixIcon: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: SvgPicture.asset("assets/Svg/Password.svg", height: 5,width: 5,),
                         ),
-                        obscureText: false,
                         hint: "Confirm Password",
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'password field cannot be empty';
+                          } else if (value.length < 6) {
+                            return 'password must be 6 digit long';
+                          }
+
+
+
+                          return null;
+                        },
+                        onFieldSubmitted: (string) {
+                          FocusScope.of(context).requestFocus(
+                              authenticationProvider.textformFeildFocusNode);
+                          return null;
+                        },
+                        textInputType: TextInputType.visiblePassword,
+                        controller: ref.watch(authenticationController).passwordConfirmationController,
+                        obscureText: ref.watch(authenticationController).passwordVisible,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            // Based on passwordVisible state choose the icon
+                            authenticationProvider.passwordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                            color: ThemeStyles.primary,
+                            size: 18,
+                          ),
+                          onPressed: () {
+
+                            setState(() {
+                              authenticationProvider.passwordVisible =
+                              !authenticationProvider.passwordVisible;
+                            });
+                          },
+                        ),
 
                       ),
                     ),
@@ -131,9 +250,14 @@ class _RegistrationScreenState extends ConsumerState<RegistrationScreen> {
                 DokanCustomButton(
                   buttonHeight: 60,
                   buttonWidth: 300,
-                  onTap: (){},
+                  onTap: (){
+                    if (registerKey.currentState!
+                        .validate()) {
+                      ref.watch(authenticationController).registration(context:context);
+                    }
+                  },
                   buttonText: "Sign Up",
-                  isLoading: false,
+                  isLoading: ref.watch(authenticationController).isLoadingRegister,
                   buttonColor: ThemeStyles.primary,
                   borderRadius: 10,
                   fontWeight: FontWeight.bold,

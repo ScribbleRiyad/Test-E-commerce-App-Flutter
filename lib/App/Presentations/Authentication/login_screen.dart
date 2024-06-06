@@ -1,5 +1,6 @@
 import 'package:flutter_svg/svg.dart';
 import 'package:test_e_commerce/App/Widgets/dokan_text_widget.dart';
+import '../../Provider/Authentication/authentication_provider.dart';
 import '../../Utils/theme_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +19,15 @@ class LoginScreen extends ConsumerStatefulWidget {
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
 
+  dynamic authenticationProvider;
+  final authenticationKey = GlobalKey<FormState>();
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    authenticationProvider = ref.watch(authenticationController);
+
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(child: Scaffold(
@@ -26,6 +35,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Form(
+              key: authenticationKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,20 +60,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       height: 55,
                       child: Center(
                         child: DokanCustomTextFormField(
-                          enabled: true,
+
                           prefixIcon: Padding(
                             padding: const EdgeInsets.all(12.0),
                             child: SvgPicture.asset(
                               "assets/Svg/Email.svg", height: 5, width: 5,),
                           ),
+                          hint: "User Name",
+                          controller: authenticationProvider.userNameController,
+                          maxLines: 1,
                           obscureText: false,
-                          hint: "Email",
-
-                        ),
+                          onFieldSubmitted: (string) {
+                            FocusScope.of(context).requestFocus(
+                                authenticationProvider.textformFeildFocusNode);
+                            return null;
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please Enter Your User Name Correctly';
+                            }
+                            return null;
+                          },
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 8,),    Card(
+                  ),),
+                  const SizedBox(height: 8,),
+                  Card(
             margin: EdgeInsets.zero,
             color: Colors.white,
             shape: RoundedRectangleBorder(
@@ -81,9 +103,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             child: SvgPicture.asset(
                               "assets/Svg/Password.svg", height: 5, width: 5,),
                           ),
-                          obscureText: false,
+                          controller: authenticationProvider.userPasswordController,
                           hint: "Password",
+                          maxLines: 1,
+                          obscureText: ref.watch(authenticationController).passwordVisible,
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'Please Enter Your Password Correctly';
+                            }
+                            return null;
+                          },
+                          onFieldSubmitted: (string) {
+                            FocusScope.of(context).requestFocus(
+                                authenticationProvider.textformFeildFocusNode);
+                            return null;
+                          },
+                          suffixIcon: IconButton(
+                            icon:  Icon(
+                              // Based on passwordVisible state choose the icon
+                              ref.watch(authenticationController).passwordVisible
+                                  ? Icons.visibility_off
+                                  : Icons.visibility,
+                              size: 18,
 
+                              color: ThemeStyles.primary,
+                            ),
+
+                            onPressed: () {
+
+                              setState(() {
+                                ref.watch(authenticationController).passwordVisible =
+                                !ref.watch(authenticationController).passwordVisible;
+                              });
+                            },
+                          ),
                         ),
                       ),
                     ),
@@ -100,9 +153,15 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   DokanCustomButton(
                     buttonHeight: 60,
                     buttonWidth: 300,
-                    onTap: () {},
+                    onTap: (){
+                      if (authenticationKey.currentState!
+                          .validate()) {
+                        ref.watch(authenticationController).login(context:context);
+                      }
+                    },
                     buttonText: "Login",
-                    isLoading: false,
+
+                    isLoading: ref.watch(authenticationController).isLoginLoading,
                     buttonColor: ThemeStyles.primary,
                     borderRadius: 10,
                     fontWeight: FontWeight.bold,
@@ -177,7 +236,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),),
 
 
-                ],
+                    ],
               ),
             ),
           ),

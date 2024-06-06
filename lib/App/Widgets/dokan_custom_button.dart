@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import '../Utils/theme_styles.dart';
 import 'dokan_text_widget.dart';
 

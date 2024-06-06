@@ -1,4 +1,6 @@
 
+import '../../Provider/Home/home_provider.dart';
+import '../../Utils/local_data.dart';
 import '../../Utils/theme_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,24 +20,47 @@ class SplashScreen extends ConsumerStatefulWidget {
 class _SplashScreenState extends ConsumerState<SplashScreen> {
 
 
+  dynamic loginStatus;
   @override
   void initState() {
     getData();
-
+    getLocalData();
     super.initState();
+  }
+
+  dynamic homeScreenProvider;
+  dynamic profileScreenProvider;
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    homeScreenProvider = ref.watch(homeScreenController);
+
+
   }
 
 
 
+
+  getLocalData() async{
+
+    loginStatus = await LocalData.getIsLoggedIn() ?? false;
+
+  }
+
+
   Future<void> getData() async {
 
-    Future.delayed(const Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 2), () {
 
+
+      if(loginStatus == true) {
         context.goNamed(RouteName.applicationScreen);
 
-
-
-
+      } else {
+        context.goNamed(RouteName.registrationScreen);
+      }
     });
 
 

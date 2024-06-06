@@ -1,31 +1,25 @@
-import 'dart:convert';
+
 
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-
 import '../../Api/urls.dart';
 import 'base_api_service.dart';
 
 class NetworkApiServices extends BaseApiServices {
-  static Future<BaseOptions> getBaseOptions() async {
-    String username = '';
-    String password = '';
-
-    String basicAuth = 'Basic ${base64Encode(utf8.encode('$username:$password'))}';
+  static Future<BaseOptions> getBaseOptions({String? token}) async {
     BaseOptions options = BaseOptions(
-       connectTimeout: const Duration(seconds: 10000),
-       receiveTimeout: const Duration(seconds: 5000),
+      connectTimeout: const Duration(seconds: 10000),
+      receiveTimeout: const Duration(seconds: 5000),
       followRedirects: false,
       validateStatus: (status) {
         return status! < 550;
       },
-
       baseUrl: Urls.baseURL,
       contentType: Headers.jsonContentType,
       headers: {
         "Accept": "application/json",
-         'Authorization': basicAuth,
+        if (token != null) 'Authorization': 'Bearer $token',
       },
     );
 

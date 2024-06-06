@@ -118,7 +118,7 @@ formInputDecoration(
       color: Colors.black,
     ),
     contentPadding: EdgeInsets.symmetric(
-        horizontal: horizontal ?? 2, vertical: vertical ?? 2),
+        horizontal: horizontal ?? 10, vertical: vertical ?? 10),
     border: const OutlineInputBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(10.00),
