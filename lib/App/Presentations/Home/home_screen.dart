@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../../Provider/Home/home_provider.dart';
 import '../../Utils/theme_styles.dart';
 import '../../Widgets/dokan_text_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../Widgets/shimmer_loader_widgets.dart';
 import 'filter_model_bottom_sheet.dart';
 
 
@@ -18,9 +20,37 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
+
+  dynamic homeScreenProvider;
+  bool _isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+
+    Future.delayed(const Duration(milliseconds: 2500), () {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+  }
+
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    homeScreenProvider = ref.watch(homeScreenController);
+    homeScreenProvider.loadProducts();
+
+  }
   @override
   Widget build(BuildContext context) {
-    return   SafeArea(child: Scaffold(
+
+    return _isLoading ?
+    const ShimmerLoading():
+
+
+      SafeArea(child: Scaffold(
       backgroundColor: ThemeStyles.scaffoldBackground,
       appBar: AppBar(
         elevation: 0,
@@ -91,6 +121,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 ),
               ),
               const SizedBox(height: 20,),
+
               GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 200,
@@ -100,11 +131,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 shrinkWrap: true,
                 scrollDirection: Axis.vertical,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: 10,
+                itemCount: ref.watch(homeScreenController).products.length,
                 itemBuilder: (context, index) {
-
-
-
+                  final product = ref.watch(homeScreenController).products[index];
                   return Card(
                     elevation: 3,
                     shadowColor: Colors.blue,
@@ -113,17 +142,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                     ),
                     child: SizedBox(
                       width: 160,
-
-
                       child: Column(
                         children: [
+                          // Your image
                           ClipRRect(
                             borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(15),
                               topRight: Radius.circular(15),
                             ),
                             child: CachedNetworkImage(
-                              imageUrl: "https://i.ibb.co/2h7ZS14/domino-studio-164-6w-VEHf-I-unsplash.jpg",
+                              imageUrl: product.imageUrl,
                               fit: BoxFit.fill,
                               width: 160,
                               height: 120,
@@ -136,8 +164,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   ),
                                 ),
                               ),
-                              errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                              errorWidget: (context, url, error) => Image.asset('assets/images/image-not-found.jpg',  width: 160,
+                                height: 120, fit: BoxFit.fill,),
                             ),
                           ),
                           Padding(
@@ -146,42 +174,43 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const DokanTextWidget(
-                                  text: "Nike Shoe",
+                                // Product name
+                                DokanTextWidget(
+                                  text: product.name,
                                   color: ThemeStyles.blackColor,
                                   fontWeight: FontWeight.bold,
                                   maxLines: 1,
-                                  fontSize: 12,
+                                  fontSize: 10,
                                 ),
                                 const SizedBox(height: 10),
-                                Row(
-                                  children: [
-                                    SvgPicture.asset(
-                                      'assets/Svg/Dollar.svg',
-                                      colorFilter: const ColorFilter.mode(
-                                        ThemeStyles.blackColor,
-                                        BlendMode.srcIn,
-                                      ),
-                                      height:15,
-                                    ),
-                                    const DokanTextWidget(
-                                      text: "2000",
-                                      color: ThemeStyles.disabledColor,
-                                      fontWeight: FontWeight.bold,
-                                      maxLines: 2,
-                                      textDecoration: TextDecoration.lineThrough,
-                                      fontSize: 12,
-                                    ),
-                                    const SizedBox(width: 5),
-                                    const DokanTextWidget(
-                                      text: "1800 BDT",
-                                      color: ThemeStyles.blackColor,
-                                      fontWeight: FontWeight.bold,
-                                      maxLines: 2,
-                                      fontSize: 14,
-                                    ),
-                                  ],
-                                ),
+                                              Row(
+                                                  children: [
+                                                    SvgPicture.asset(
+                                                      'assets/Svg/Dollar.svg',
+                                                      colorFilter: const ColorFilter.mode(
+                                                        ThemeStyles.blackColor,
+                                                        BlendMode.srcIn,
+                                                      ),
+                                                      height:15,
+                                                    ),
+                                                     DokanTextWidget(
+                                                      text: product.regularPrice,
+                                                      color: ThemeStyles.disabledColor,
+                                                      fontWeight: FontWeight.bold,
+                                                      maxLines: 2,
+                                                      textDecoration: TextDecoration.lineThrough,
+                                                      fontSize: 12,
+                                                    ),
+                                                    const SizedBox(width: 5),
+                                                     DokanTextWidget(
+                                                       text: product.price,
+                                                      color: ThemeStyles.blackColor,
+                                                      fontWeight: FontWeight.bold,
+                                                      maxLines: 2,
+                                                      fontSize: 14,
+                                                    ),
+                                                  ],
+                                                ),
                               ],
                             ),
                           ),
