@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../Repository/Profile/profile_repo.dart';
 import '../../Utils/local_data.dart';
+import '../../Utils/utils.dart';
 
 
 
@@ -25,10 +26,10 @@ class ProfileScreenProvider extends ChangeNotifier {
 
 
   void getProfileLocalData() async{
-    userName = await LocalData.getUserName();
+    userName = await LocalData.getDisplayName();
     email = await LocalData.getUserEmail();
     token = await LocalData.getUserToken();
-    print(token);
+
 
     notifyListeners();
   }
@@ -50,7 +51,7 @@ class ProfileScreenProvider extends ChangeNotifier {
 
 
     response = await profileRepository.updateProfileData(data: jsonData, token: token );
-    print(response.statusCode);
+     print(response.statusCode);
 
 
     if (response.statusCode == 200)
@@ -71,7 +72,7 @@ class ProfileScreenProvider extends ChangeNotifier {
       notifyListeners();
     }
     else{
-      // Utils.customSnackBar(context: context, snackText: response.data['message'], snackDuration: 3);
+       Utils.customSnackBar(context: context, snackText: response.data['message'], snackDuration: 3);
       isUpdateProfileLoading = false;
       notifyListeners();
     }
